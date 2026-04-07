@@ -1,4 +1,4 @@
-## Repositorio para a aula de Orientação a Objetos da Quarta Fase de sistemas
+## Repositorio para a aula de Projeto de Extensão - 6ª Fase - S.I.
 
 # Guia de Contribuição
 
