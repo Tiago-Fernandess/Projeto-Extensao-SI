@@ -6,7 +6,7 @@
 
 ```bash
 # Usando HTTPS
-git clone https://github.com/ViniciusDuranteBagio/OOPQuartaFase.git
+git clone https://github.com/Tiago-Fernandess/Projeto-Extensao-SI.git
 ```
 
 Entre na pasta do projeto:
@@ -110,7 +110,7 @@ git push --force-with-lease
 ## Fluxo resumido
 
 ```bash
-git clone https://github.com/ViniciusDuranteBagio/OOPQuartaFase.git
+git clone https://github.com/Tiago-Fernandess/Projeto-Extensao-SI.git
 cd OOPQuartaFase
 git checkout -b feature/minha-nova-funcionalidade
 # editar arquivos...
