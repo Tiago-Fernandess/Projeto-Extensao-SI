@@ -20,7 +20,8 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private TipoItem tipo;
     private LocalDateTime dataRegistro;
-    private String categoria;
+    @Enumerated(EnumType.STRING)
+    private CategoriaItem categoria;
     @PrePersist
     public void prePersist() {
         if (this.dataRegistro == null) {
@@ -83,11 +84,11 @@ public class Item {
         this.dataRegistro = dataRegistro;
     }
 
-    public String getCategoria() {
+    public CategoriaItem getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(CategoriaItem categoria) {
         this.categoria = categoria;
     }
 

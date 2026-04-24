@@ -1,5 +1,6 @@
 package com.achadoseperdidos.achadoseperdidos.service;
 
+import com.achadoseperdidos.achadoseperdidos.entity.CategoriaItem;
 import com.achadoseperdidos.achadoseperdidos.entity.Item;
 import com.achadoseperdidos.achadoseperdidos.entity.TipoItem;
 import com.achadoseperdidos.achadoseperdidos.repository.ItemRepository;
@@ -40,5 +41,8 @@ public class ItemService {
     }
     public List<Item> findByType(TipoItem tipo) {
         return repository.findByTipo(tipo);
+    }
+    public List<Item> findByCategoria(CategoriaItem categoria){
+        return repository.findByCategoria(categoria);
     }
 }

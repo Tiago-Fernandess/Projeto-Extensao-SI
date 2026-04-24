@@ -1,5 +1,6 @@
 package com.achadoseperdidos.achadoseperdidos.controller;
 
+import com.achadoseperdidos.achadoseperdidos.entity.CategoriaItem;
 import com.achadoseperdidos.achadoseperdidos.entity.Item;
 import com.achadoseperdidos.achadoseperdidos.entity.TipoItem;
 import com.achadoseperdidos.achadoseperdidos.service.ItemService;
@@ -43,5 +44,9 @@ public class ItemController {
     @GetMapping("/tipo/{tipo}")
     public List <Item> findByType(@PathVariable TipoItem tipo){
         return itemService.findByType(tipo);
+    }
+    @GetMapping("/categoria/{categoria}")
+    public List <Item> findByCategoria(@PathVariable CategoriaItem categoria){
+        return itemService.findByCategoria(categoria);
     }
 }
