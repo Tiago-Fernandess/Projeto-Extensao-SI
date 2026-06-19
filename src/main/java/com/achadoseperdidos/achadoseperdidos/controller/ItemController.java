@@ -1,5 +1,6 @@
 package com.achadoseperdidos.achadoseperdidos.controller;
 
+import com.achadoseperdidos.achadoseperdidos.dto.ItemResponseDTO;
 import com.achadoseperdidos.achadoseperdidos.entity.CategoriaItem;
 import com.achadoseperdidos.achadoseperdidos.entity.Item;
 import com.achadoseperdidos.achadoseperdidos.entity.TipoItem;
@@ -22,12 +23,12 @@ public class ItemController {
     }
     // LIST
     @GetMapping
-    public List<Item> findAll(){
+    public List<ItemResponseDTO> findAll(){
         return itemService.findAll();
     }
     // GET BY ID
     @GetMapping("/{id}")
-    public Item findById(@PathVariable Long id){
+    public ItemResponseDTO findById(@PathVariable Long id){
         return itemService.findById(id);
     }
     // UPDATE
