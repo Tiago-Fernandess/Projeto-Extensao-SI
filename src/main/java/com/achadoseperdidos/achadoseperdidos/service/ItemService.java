@@ -32,7 +32,9 @@ public class ItemService {
         List<Item> itens = repository.findAll();
 
         if(itens.isEmpty()){
-            throw new ItemNotFoundException(0L);
+            throw new ItemInvalidoException(
+                    "Nenhum item cadastrado."
+            );
         }
 
         return itens.stream()
