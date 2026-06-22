@@ -1,10 +1,12 @@
 package com.achadoseperdidos.achadoseperdidos.controller;
 
+import com.achadoseperdidos.achadoseperdidos.dto.ItemRequestDTO;
 import com.achadoseperdidos.achadoseperdidos.dto.ItemResponseDTO;
 import com.achadoseperdidos.achadoseperdidos.entity.CategoriaItem;
 import com.achadoseperdidos.achadoseperdidos.entity.Item;
 import com.achadoseperdidos.achadoseperdidos.entity.TipoItem;
 import com.achadoseperdidos.achadoseperdidos.service.ItemService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class ItemController {
     }
     // CREATE
     @PostMapping
-    public Item create (@RequestBody Item item){
+    public ItemResponseDTO create (@RequestBody @Valid ItemRequestDTO item){
         return itemService.create(item);
     }
     // LIST
@@ -33,7 +35,7 @@ public class ItemController {
     }
     // UPDATE
     @PutMapping("/{id}")
-    public Item update(@PathVariable Long id, @RequestBody Item item){
+    public ItemResponseDTO update(@PathVariable Long id, @RequestBody @Valid ItemRequestDTO item){
         return itemService.update(id, item);
     }
     // DELETE
@@ -43,11 +45,11 @@ public class ItemController {
     }
     // FILTER
     @GetMapping("/tipo/{tipo}")
-    public List <Item> findByType(@PathVariable TipoItem tipo){
+    public List <ItemResponseDTO> findByType(@PathVariable TipoItem tipo){
         return itemService.findByType(tipo);
     }
     @GetMapping("/categoria/{categoria}")
-    public List <Item> findByCategoria(@PathVariable CategoriaItem categoria){
+    public List <ItemResponseDTO> findByCategoria(@PathVariable CategoriaItem categoria){
         return itemService.findByCategoria(categoria);
     }
 }

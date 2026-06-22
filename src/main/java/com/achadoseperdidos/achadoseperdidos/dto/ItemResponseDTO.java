@@ -3,6 +3,7 @@ package com.achadoseperdidos.achadoseperdidos.dto;
 import com.achadoseperdidos.achadoseperdidos.entity.CategoriaItem;
 import com.achadoseperdidos.achadoseperdidos.entity.Item;
 import com.achadoseperdidos.achadoseperdidos.entity.TipoItem;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class ItemResponseDTO {
     private String nomeUsuario;
     private String contato;
     private TipoItem tipo;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataRegistro;
     private CategoriaItem categoria;
 
