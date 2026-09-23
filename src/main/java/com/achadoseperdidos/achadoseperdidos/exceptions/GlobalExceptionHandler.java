@@ -50,4 +50,10 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(message);
     }
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ResponseEntity<String> handleCredenciaisInvalidas(CredenciaisInvalidasException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED) // Erro 401
+                .body(ex.getMessage());
+    }
 }

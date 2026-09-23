@@ -28,6 +28,16 @@ public class Item {
             this.dataRegistro = LocalDateTime.now();
         }
     }
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = true)
+    private Usuario donoDoItem;
+    public Usuario getDonoDoItem() {
+        return donoDoItem;
+    }
+
+    public void setDonoDoItem(Usuario donoDoItem) {
+        this.donoDoItem = donoDoItem;
+    }
     public Long getId() {
         return id;
     }
