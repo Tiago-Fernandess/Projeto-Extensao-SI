@@ -55,7 +55,12 @@ public class ItemService {
         if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
             String emailLogado = auth.getName();
             Usuario dono = usuarioRepository.findByEmail(emailLogado).orElse(null);
+
             entity.setDonoDoItem(dono);
+
+            if (dono != null) {
+                entity.setNomeUsuario(dono.getNome());
+            }
         }
 
         return entityToResponseDTO(repository.save(entity));
