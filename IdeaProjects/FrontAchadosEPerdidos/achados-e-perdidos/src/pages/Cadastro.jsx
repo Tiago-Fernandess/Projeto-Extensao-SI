@@ -20,14 +20,16 @@ function Cadastro() {
 
   async function salvar(e) {
     e.preventDefault();
+    const token = localStorage.getItem("token"); // Busca o token
 
     await fetch(`${API_URL}/items`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(form),
-});
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }), // Envia se estiver logado
+      },
+      body: JSON.stringify(form),
+    });
 
     navigate("/");
   }
@@ -94,7 +96,12 @@ function Cadastro() {
               onChange={handleChange}
             />
 
-            <select className="select" name="tipo" value={form.tipo} onChange={handleChange}>
+            <select
+              className="select"
+              name="tipo"
+              value={form.tipo}
+              onChange={handleChange}
+            >
               <option value="PERDIDO">PERDIDO</option>
               <option value="ENCONTRADO">ENCONTRADO</option>
             </select>

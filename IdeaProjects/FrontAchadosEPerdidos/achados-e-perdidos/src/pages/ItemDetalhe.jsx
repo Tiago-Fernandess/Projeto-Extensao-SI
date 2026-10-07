@@ -28,15 +28,22 @@ function ItemDetalhe() {
 
   async function atualizar(e) {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     try {
-      await fetch(`${API_URL}/items/${id}`, {
+      const res = await fetch(`${API_URL}/items/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify(form),
       });
+
+      if (res.status === 403 || res.status === 401) {
+        alert("Você precisa estar logado para editar este item.");
+        return;
+      }
 
       navigate("/");
     } catch (error) {
@@ -48,7 +55,6 @@ function ItemDetalhe() {
 
   return (
     <div className="container">
-
       <header className="topbar">
         <div className="brand">
           <strong>Editar Item</strong>
@@ -62,7 +68,6 @@ function ItemDetalhe() {
 
       <section className="form-card">
         <form onSubmit={atualizar} className="form-grid">
-
           <input
             className="input"
             name="nome"
@@ -120,7 +125,6 @@ function ItemDetalhe() {
               Cancelar
             </Link>
           </div>
-
         </form>
       </section>
     </div>

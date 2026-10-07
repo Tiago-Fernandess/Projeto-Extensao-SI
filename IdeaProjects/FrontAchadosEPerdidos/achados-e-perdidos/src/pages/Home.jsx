@@ -32,15 +32,30 @@ function Home() {
     const confirm = window.confirm("Tem certeza que quer deletar?");
     if (!confirm) return;
 
+    const token = localStorage.getItem("token");
+
     try {
-      await fetch(`${API_URL}/items/${id}`, {
+      const res = await fetch(`${API_URL}/items/${id}`, {
         method: "DELETE",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
       });
+
+      if (res.status === 403 || res.status === 401) {
+        alert("Você precisa estar logado para apagar um item.");
+        return;
+      }
 
       setItens((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Erro ao deletar item:", error);
     }
+  }
+
+  function fazerLogout() {
+    localStorage.removeItem("token");
+    window.location.reload(); // Recarrega a página para limpar os estados
   }
 
   const filtrados = useMemo(() => {
@@ -65,6 +80,15 @@ function Home() {
         </div>
 
         <div className="nav-actions">
+          {localStorage.getItem("token") ? (
+            <button onClick={fazerLogout} className="button button-secondary">
+              Sair
+            </button>
+          ) : (
+            <Link to="/login" className="button button-secondary">
+              Login
+            </Link>
+          )}
           <Link to="/cadastro" className="button button-primary">
             + Cadastrar item
           </Link>
@@ -74,8 +98,9 @@ function Home() {
       <section className="hero">
         <h1>Procure, filtre e encontre rápido</h1>
         <p>
-          Consulte os itens catalogados, filtre por tipo ou categoria e veja os detalhes
-          de cada objeto. Se encontrou algo, cadastre no sistema em poucos segundos.
+          Consulte os itens catalogados, filtre por tipo ou categoria e veja os
+          detalhes de cada objeto. Se encontrou algo, cadastre no sistema em
+          poucos segundos.
         </p>
 
         <div className="hero-row">
@@ -135,9 +160,7 @@ function Home() {
           <span className="badge primary">
             {filtrados.length} item(ns) visível(is)
           </span>
-          <span className="badge">
-            Total no sistema: {itens.length}
-          </span>
+          <span className="badge">Total no sistema: {itens.length}</span>
         </div>
       </section>
 
@@ -151,7 +174,6 @@ function Home() {
         <div className="grid">
           {filtrados.map((item) => (
             <div className="card" key={item.id}>
-              
               <div className="card-header">
                 <span
                   className={`badge ${
