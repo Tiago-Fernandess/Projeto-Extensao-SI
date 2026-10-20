@@ -7,6 +7,7 @@ import com.achadoseperdidos.achadoseperdidos.entity.Usuario;
 import com.achadoseperdidos.achadoseperdidos.exceptions.CredenciaisInvalidasException;
 import com.achadoseperdidos.achadoseperdidos.repository.UsuarioRepository;
 import com.achadoseperdidos.achadoseperdidos.security.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<String> cadastrar(@RequestBody UsuarioCadastroDTO dto) {
+    public ResponseEntity<String> cadastrar(@RequestBody @Valid UsuarioCadastroDTO dto) {
         if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email já cadastrado.");
         }
