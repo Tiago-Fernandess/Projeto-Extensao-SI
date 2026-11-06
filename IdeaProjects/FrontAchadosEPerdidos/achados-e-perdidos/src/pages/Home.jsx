@@ -34,6 +34,11 @@ function Home() {
 
     const token = localStorage.getItem("token");
 
+    if (!token) {
+      alert("Você precisa estar logado para apagar um item.");
+      return;
+    }
+
     try {
       const res = await fetch(`${API_URL}/items/${id}`, {
         method: "DELETE",
@@ -42,8 +47,12 @@ function Home() {
         },
       });
 
-      if (res.status === 403 || res.status === 401) {
-        alert("Você precisa estar logado para apagar um item.");
+      if (!res.ok) {
+        const mensagem = await res.text();
+        alert(
+          mensagem ||
+            "Não foi possível apagar este item. Verifique se ele foi criado por você."
+        );
         return;
       }
 

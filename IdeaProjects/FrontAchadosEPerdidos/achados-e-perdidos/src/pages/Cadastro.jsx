@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import API_URL from "../api";
 function Cadastro() {
   const navigate = useNavigate();
+  const [erro, setErro] = useState("");
 
   const [form, setForm] = useState({
     nome: "",
@@ -20,18 +21,30 @@ function Cadastro() {
 
   async function salvar(e) {
     e.preventDefault();
+    setErro("");
     const token = localStorage.getItem("token"); // Busca o token
 
-    await fetch(`${API_URL}/items`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }), // Envia se estiver logado
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch(`${API_URL}/items`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(form),
+      });
 
-    navigate("/");
+      if (!res.ok) {
+        const mensagem = await res.text();
+        setErro(mensagem || "Não foi possível cadastrar o item.");
+        return;
+      }
+
+      alert("Item cadastrado com sucesso!");
+      navigate("/");
+    } catch (error) {
+      setErro("Não foi possível conectar ao servidor. Tente novamente.");
+    }
   }
 
   return (
@@ -50,6 +63,12 @@ function Cadastro() {
       <section className="form-card">
         <form onSubmit={salvar}>
           <div className="form-grid">
+            {erro && (
+              <div className="full" style={{ color: "#b91c1c", fontWeight: "bold" }}>
+                {erro}
+              </div>
+            )}
+
             <input
               className="input"
               type="text"
