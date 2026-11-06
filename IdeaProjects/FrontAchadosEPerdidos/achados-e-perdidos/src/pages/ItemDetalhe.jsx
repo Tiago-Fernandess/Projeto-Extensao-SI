@@ -12,15 +12,15 @@ function ItemDetalhe() {
     carregarItem();
   }, []);
 
-  async function carregarItem() {
-    try {
-      const res = await fetch(`${API_URL}/items/${id}`);
-      const data = await res.json();
-      setForm(data);
-    } catch (error) {
-      console.error("Erro ao carregar item:", error);
-    }
-  }
+  async function carregarItem() { 
+  try { 
+    const res = await fetch(`${API_URL}/items/${id}`); 
+    const data = await res.json(); 
+    setForm(data); 
+  } catch (error) { 
+    console.error("Erro ao carregar item:", error); 
+  } 
+}
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -40,10 +40,15 @@ function ItemDetalhe() {
         body: JSON.stringify(form),
       });
 
-      if (res.status === 403 || res.status === 401) {
-        alert("Você precisa estar logado para editar este item.");
-        return;
-      }
+      if (res.status === 401) {
+    alert("Você precisa estar logado.");
+    return;
+}
+
+  if (res.status === 403) {
+    alert("Você só pode editar itens que você criou.");
+    return;
+}
 
       navigate("/");
     } catch (error) {

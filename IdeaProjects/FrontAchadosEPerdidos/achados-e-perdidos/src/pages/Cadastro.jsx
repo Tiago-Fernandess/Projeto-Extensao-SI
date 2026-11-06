@@ -1,9 +1,11 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API_URL from "../api";
+
 function Cadastro() {
   const navigate = useNavigate();
-  const [erro, setErro] = useState("");
+  const token = localStorage.getItem("token");
 
   const [form, setForm] = useState({
     nome: "",
@@ -21,30 +23,61 @@ function Cadastro() {
 
   async function salvar(e) {
     e.preventDefault();
-    setErro("");
-    const token = localStorage.getItem("token"); // Busca o token
+
+    if (!token) {
+      alert("Você precisa estar logado para cadastrar um item.");
+      navigate("/login");
+      return;
+    }
 
     try {
       const res = await fetch(`${API_URL}/items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(form),
       });
 
+      if (res.status === 401) {
+        alert("Sua sessão expirou. Faça login novamente.");
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
+      }
+
       if (!res.ok) {
-        const mensagem = await res.text();
-        setErro(mensagem || "Não foi possível cadastrar o item.");
+        alert("Erro ao cadastrar item.");
         return;
       }
 
       alert("Item cadastrado com sucesso!");
       navigate("/");
     } catch (error) {
-      setErro("Não foi possível conectar ao servidor. Tente novamente.");
+      console.error("Erro ao cadastrar item:", error);
+      alert("Não foi possível conectar ao servidor.");
     }
+  }
+
+  // Impede o acesso ao formulário sem login
+  if (!token) {
+    return (
+      <div className="container">
+        <section className="form-card">
+          <h2>Login necessário</h2>
+          <p>Você precisa estar logado para cadastrar um item.</p>
+
+          <Link to="/login" className="button button-primary">
+            Fazer login
+          </Link>
+
+          <Link to="/" className="button button-secondary">
+            Voltar
+          </Link>
+        </section>
+      </div>
+    );
   }
 
   return (
@@ -63,12 +96,6 @@ function Cadastro() {
       <section className="form-card">
         <form onSubmit={salvar}>
           <div className="form-grid">
-            {erro && (
-              <div className="full" style={{ color: "#b91c1c", fontWeight: "bold" }}>
-                {erro}
-              </div>
-            )}
-
             <input
               className="input"
               type="text"
@@ -144,6 +171,7 @@ function Cadastro() {
             <button className="button button-primary" type="submit">
               Salvar item
             </button>
+
             <Link to="/" className="button button-secondary">
               Cancelar
             </Link>

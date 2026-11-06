@@ -8,6 +8,7 @@ function Home() {
   const [tipo, setTipo] = useState("");
   const [categoria, setCategoria] = useState("");
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
 
   useEffect(() => {
     buscarItens();
@@ -34,11 +35,6 @@ function Home() {
 
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      alert("Você precisa estar logado para apagar um item.");
-      return;
-    }
-
     try {
       const res = await fetch(`${API_URL}/items/${id}`, {
         method: "DELETE",
@@ -47,14 +43,15 @@ function Home() {
         },
       });
 
-      if (!res.ok) {
-        const mensagem = await res.text();
-        alert(
-          mensagem ||
-            "Não foi possível apagar este item. Verifique se ele foi criado por você."
-        );
-        return;
-      }
+      if (res.status === 401) {
+    alert("Você precisa estar logado.");
+    return;
+}
+
+if (res.status === 403) {
+    alert("Você só pode excluir itens que você criou.");
+    return;
+}
 
       setItens((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
@@ -63,22 +60,21 @@ function Home() {
   }
 
   function fazerLogout() {
-    localStorage.removeItem("token");
-    window.location.reload(); // Recarrega a página para limpar os estados
-  }
+  localStorage.removeItem("token");
+  setToken(null);
+}
 
-  const filtrados = useMemo(() => {
-    return itens.filter((item) => {
-      const texto =
-        `${item.nome} ${item.descricao ?? ""} ${item.local ?? ""}`.toLowerCase();
+  const filtrados = useMemo(() => { 
+  return itens.filter((item) => { 
+    const texto = `${item.nome} ${item.descricao ?? ""} ${item.local ?? ""}`.toLowerCase();
+    
+    const matchBusca = texto.includes(busca.toLowerCase());
+    const matchTipo = tipo ? item.tipo === tipo : true;
+    const matchCategoria = categoria ? item.categoria === categoria : true;
 
-      const matchBusca = texto.includes(busca.toLowerCase());
-      const matchTipo = tipo ? item.tipo === tipo : true;
-      const matchCategoria = categoria ? item.categoria === categoria : true;
-
-      return matchBusca && matchTipo && matchCategoria;
-    });
-  }, [itens, busca, tipo, categoria]);
+    return matchBusca && matchTipo && matchCategoria;
+  });
+}, [itens, busca, tipo, categoria]);
 
   return (
     <div className="container">
@@ -89,19 +85,26 @@ function Home() {
         </div>
 
         <div className="nav-actions">
-          {localStorage.getItem("token") ? (
-            <button onClick={fazerLogout} className="button button-secondary">
-              Sair
-            </button>
-          ) : (
-            <Link to="/login" className="button button-secondary">
-              Login
-            </Link>
-          )}
-          <Link to="/cadastro" className="button button-primary">
-            + Cadastrar item
-          </Link>
-        </div>
+  {token ? (
+    <>
+      <button onClick={fazerLogout} className="button button-secondary">
+        Sair
+      </button>
+
+      <Link to="/cadastro" className="button button-primary">
+        + Cadastrar item
+      </Link>
+    </>
+  ) : (
+    <>
+      <Link to="/login" className="button button-secondary">
+        Login
+      </Link>
+
+      <span>Faça login para cadastrar itens</span>
+    </>
+  )}
+</div>
       </header>
 
       <section className="hero">
