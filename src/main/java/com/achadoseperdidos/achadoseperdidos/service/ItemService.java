@@ -31,7 +31,7 @@ public class ItemService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    private void verificarPropriedadeDoItem(Item item) {
+    private void verificarPropriedadeDoItem(Item item, String acao) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         // Falha de segurança extra caso chegue sem contexto
@@ -43,7 +43,9 @@ public class ItemService {
 
         // Se o item for anônimo (criado sem usuário) ou o dono for diferente do usuário logado, bloqueia
         if (item.getDonoDoItem() == null || !item.getDonoDoItem().getEmail().equals(emailLogado)) {
-            throw new AcessoNegadoException("Você não tem permissão para modificar ou apagar este item.");
+            throw new AcessoNegadoException(
+                    "Não é possível " + acao + " este item. Você só pode " + acao + " um item que você criou."
+            );
         }
     }
     public ItemResponseDTO create(ItemRequestDTO itemDTO){
@@ -90,7 +92,7 @@ public class ItemService {
 
         Item existente = repository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
 
-        verificarPropriedadeDoItem(existente);
+        verificarPropriedadeDoItem(existente, "alterar");
 
         existente.setNome(novoItem.getNome());
         existente.setDescricao(novoItem.getDescricao());
@@ -107,7 +109,7 @@ public class ItemService {
     public void delete(Long id) {
         Item item = buscaItem(id);
 
-        verificarPropriedadeDoItem(item);
+        verificarPropriedadeDoItem(item, "apagar");
 
         repository.delete(item);
     }

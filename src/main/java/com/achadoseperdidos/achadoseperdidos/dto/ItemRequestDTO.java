@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 public class ItemRequestDTO {
     @NotBlank(message="Nome não pode ser vazio")
     private String nome;
-    @NotBlank(message="Descrição não pode ser vazia")
     private String descricao;
     @NotBlank(message="Local não pode ser vazio")
     private String local;
